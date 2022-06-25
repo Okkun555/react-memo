@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
+import { ChangeEvent, useState } from 'react';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [text, setText] = useState<string>("");
+  const [memoList, setMemoList] = useState<string[]>([]);
+
+  const changeForm = (e: ChangeEvent<HTMLInputElement>): void => {
+    setText(e.target.value);
+  }
+
+  const addMemo = (): void => {
+    const newMemo = [...memoList];
+    newMemo.push(text);
+    setMemoList(newMemo);
+
+    setText("");
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>簡易メモアプリ</h1>
+      <input type="text" value={text} onChange={changeForm} />
+      <button onClick={addMemo}>追加</button>
+
+      <p>メモ一覧</p>
+      {memoList.map((memo, index) => (
+        <li key={index}>
+          {memo}
+        </li>
+      ))}
     </div>
   );
 }
