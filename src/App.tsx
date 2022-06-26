@@ -1,21 +1,28 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, FC, useCallback, useState } from 'react';
 import './App.css';
+import { MemoList } from './components/MemoList';
 
-const App = () => {
+const App: FC = () => {
   const [text, setText] = useState<string>("");
-  const [memoList, setMemoList] = useState<string[]>([]);
+  const [memos, setMemos] = useState<string[]>([]);
 
   const changeForm = (e: ChangeEvent<HTMLInputElement>): void => {
     setText(e.target.value);
   }
 
   const addMemo = (): void => {
-    const newMemo = [...memoList];
+    const newMemo = [...memos];
     newMemo.push(text);
-    setMemoList(newMemo);
+    setMemos(newMemo);
 
     setText("");
   }
+
+  const removeMemo = useCallback((index: number): void => {
+    const newMemo = [...memos];
+    newMemo.splice(index, 1);
+    setMemos(newMemo);
+  }, [memos]);
 
   return (
     <div>
@@ -23,12 +30,7 @@ const App = () => {
       <input type="text" value={text} onChange={changeForm} />
       <button onClick={addMemo}>追加</button>
 
-      <p>メモ一覧</p>
-      {memoList.map((memo, index) => (
-        <li key={index}>
-          {memo}
-        </li>
-      ))}
+      <MemoList memos={memos} removeMemo={removeMemo} />
     </div>
   );
 }
